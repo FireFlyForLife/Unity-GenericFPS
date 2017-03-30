@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseCharacter : MonoBehaviour {
+public class BaseCharacter : MonoBehaviour, Damageable {
     public int Health {
         get {
             return _health;
@@ -18,4 +19,9 @@ public class BaseCharacter : MonoBehaviour {
     public bool IsDead() { return Health <= 0; }
 
     virtual protected void OnDeath() { }
+
+    public void Damage(int amount)
+    {
+        Health -= amount;
+    }
 }

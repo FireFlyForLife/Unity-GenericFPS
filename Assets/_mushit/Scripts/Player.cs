@@ -36,6 +36,8 @@ public class Player : BaseCharacter {
         if (controllingVehicle != null) {
             controllingVehicle.canControl = false;
             controllingVehicle.OnStop();
+            if(controllingVehicle.UI != null)
+                controllingVehicle.UI.gameObject.SetActive(false);
             cam.transform.parent = pData.CameraPosition;
 
             pData.PlayerObject.transform.position = controllingVehicle.ejectPosition.position;
@@ -49,12 +51,23 @@ public class Player : BaseCharacter {
 
         controllingVehicle = vehicle;
 
-        if (vehicle != null) {
+        if (vehicle != null && vehicle.Armour > 0) {
             vehicle.canControl = true;
             vehicle.OnStart();
             cam.transform.parent = vehicle.CameraLocation;
-            
+            if (controllingVehicle.UI != null)
+                controllingVehicle.UI.gameObject.SetActive(true);
+
             SetControl(false);
+            SetEnabledRecursivly(false, pData.Gun);
+            if(pData.UI != null)
+                pData.UI.enabled = false;
+        }
+        else
+        {
+            SetEnabledRecursivly(true, pData.Gun);
+            if (pData.UI != null)
+                pData.UI.enabled = true;
         }
 
         cam.transform.localPosition = Vector3.zero;

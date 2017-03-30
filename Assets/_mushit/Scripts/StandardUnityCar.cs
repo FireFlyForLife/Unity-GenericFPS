@@ -7,6 +7,7 @@ public class StandardUnityCar : Vehicle {
     public bool startEnabled = false;
 
     CarUserControl carController;
+    CarAudio carAudio;
 
     protected override void init()
     {
@@ -14,6 +15,10 @@ public class StandardUnityCar : Vehicle {
 
         carController = GetComponent<CarUserControl>();
         carController.enabled = startEnabled;
+
+        carAudio = GetComponent<CarAudio>();
+        carAudio.StopSound();
+        carAudio.enabled = false;
     }
 
     public override void OnStart()
@@ -21,6 +26,9 @@ public class StandardUnityCar : Vehicle {
         base.OnStart();
         carController.enabled = true;
         carController.m_Car.Move(0, 0, 0, 0);
+
+        carAudio.StartSound();
+        carAudio.enabled = true;
     }
 
     public override void OnStop()
@@ -28,5 +36,8 @@ public class StandardUnityCar : Vehicle {
         base.OnStop();
         carController.enabled = false;
         carController.m_Car.Move(0, 0, 0, 1);
+
+        carAudio.StopSound();
+        carAudio.enabled = false;
     }
 }
