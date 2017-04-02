@@ -30,6 +30,11 @@ public class Player : BaseCharacter {
         //Do other player things
 	}
 
+    public Vehicle GetControllingVehicle()
+    {
+        return controllingVehicle;
+    }
+
     public void SetControllingVehicle(Vehicle vehicle) {
         Camera cam = Camera.main;
 

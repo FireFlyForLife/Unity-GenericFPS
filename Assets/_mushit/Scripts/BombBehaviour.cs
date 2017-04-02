@@ -22,6 +22,10 @@ public class BombBehaviour : MonoBehaviour {
 
     public void Release()
     {
+        Rigidbody parentRidigbody = transform.parent.GetComponentInParent<Rigidbody>();
+        if (parentRidigbody)
+            rigidbody.velocity = parentRidigbody.velocity;
+
         transform.parent = null;
         collider.enabled = true;
 
@@ -48,7 +52,7 @@ public class BombBehaviour : MonoBehaviour {
         Collider[] colliders = Physics.OverlapSphere(hit, radius);
         foreach(Collider c in colliders)
         {
-            Damageable character = col.gameObject.GetComponent<Damageable>();
+            Damageable character = c.transform.root.GetComponent<Damageable>();
             if (character != null)
             {
                 float dist = (c.transform.position - hit).magnitude;

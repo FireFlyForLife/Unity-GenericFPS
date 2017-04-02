@@ -13,14 +13,14 @@ public class JetWeaponController : MonoBehaviour
     public float RocketDelay = 0.75f;
     private DelayCheck RocketDelayCheck;
     private int rocketIndex = 0;
-    public int RocketIndex { get { return rocketIndex; } }
+    public int RocketIndex { set { rocketIndex = value; } get { return rocketIndex; } }
 
     //Bombs
     public GameObject[] Bombs;
     public float BombDropDelay;
     private DelayCheck BombCheck;
     private int bombIndex = 0;
-    public int BombIndex { get { return bombIndex; } }
+    public int BombIndex { set { bombIndex = value; } get { return bombIndex; } }
 
     //mg
     public float fireDelay = 0.1f;
@@ -28,6 +28,7 @@ public class JetWeaponController : MonoBehaviour
     public AudioSource FireMG;
     public GameObject shotPrefab;
     public int MGAmmo = 500;
+    public int MaxMGAmmo = 500;
     private DelayCheck MGDelayCheck;
 
     Vehicle jet;
@@ -68,7 +69,7 @@ public class JetWeaponController : MonoBehaviour
             if(Rockets.Length > rocketIndex)
             {
                 GameObject rocket = Rockets[rocketIndex++];
-                RocketBehaviour r = rocket.GetComponent<RocketBehaviour>();
+                RocketBehaviour r = rocket.GetComponentInChildren<RocketBehaviour>();
                 r.Release();
             }
         }
@@ -78,8 +79,7 @@ public class JetWeaponController : MonoBehaviour
             if (Bombs.Length > bombIndex)
             {
                 GameObject bomb = Bombs[bombIndex++];
-                BombBehaviour bombController = bomb.GetComponent<BombBehaviour>();
-                bomb.GetComponent<Rigidbody>().velocity = rigidbody.velocity;
+                BombBehaviour bombController = bomb.GetComponentInChildren<BombBehaviour>();
                 bombController.Release();
             }
         }

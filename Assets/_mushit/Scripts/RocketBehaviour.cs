@@ -6,15 +6,21 @@ using Utils;
 public class RocketBehaviour : MonoBehaviour {
     public ParticleSystem ExhaustEffect;
     public GameObject ExplosionEffect;
+    public AudioSource EngineSound;
 
     public float explosionForce = 20f;
     public float radius = 150;
     public int damage = 100;
 
-    public float delay = 2;
+    public float delay = 2f;
+    public float acceleration = 5f;
+    public float startVelocity = 50f;
+    public float targetVelocity = 250f;
+    private float targetVelocitySqrt;
 
     private DelayCheck delayCheck;
-    private bool fired = true;
+    private bool fired = false;
+    private bool released = false;
     private new Rigidbody rigidbody;
     private new Collider collider;
 
@@ -23,15 +29,26 @@ public class RocketBehaviour : MonoBehaviour {
         rigidbody = GetComponent<Rigidbody>();
         collider = GetComponent<Collider>();
 
+        targetVelocitySqrt = targetVelocity * targetVelocity;
     }
 	
 	void Update () {
-		if(!fired && delayCheck.Check(Time.time))
+		if(released && ( fired || delayCheck.Check(Time.time)))
         {
-            fired = true;
+            if(rigidbody.velocity.sqrMagnitude < targetVelocitySqrt)
+                rigidbody.AddForce(transform.up * acceleration, ForceMode.Acceleration);
 
-            ExhaustEffect.Play();
-            rigidbody.useGravity = false;
+            Debug.Log(rigidbody.velocity.magnitude);
+
+            if (!fired)
+            {
+                fired = true;
+
+                ExhaustEffect.Play();
+                EngineSound.Play();
+                rigidbody.useGravity = false;
+                rigidbody.velocity = transform.up * rigidbody.velocity.magnitude;
+            }
         }
 	}
 
@@ -39,12 +56,29 @@ public class RocketBehaviour : MonoBehaviour {
     {
         rigidbody.isKinematic = false;
         rigidbody.useGravity = true;
+        rigidbody.freezeRotation = true;
+        Rigidbody parentRidigbody = transform.parent.GetComponentInParent<Rigidbody>();
+        if (parentRidigbody)
+            rigidbody.velocity = parentRidigbody.velocity;
+
         collider.enabled = true;
         fired = false;
-        Rigidbody parentRidigbody = transform.parent.GetComponentInParent<Rigidbody>();
-        if(parentRidigbody)
-            rigidbody.velocity = parentRidigbody.velocity;
+        released = true;
+        
         transform.parent = null;
+
+        delayCheck = new DelayCheck(delay, Time.time);
+
+        Vehicle controllingVehicle = Player.PlayerController.GetControllingVehicle();
+        if (controllingVehicle != null)
+        {
+            Collider[] vehicleColliders = controllingVehicle.GetComponentsInChildren<Collider>();
+            foreach (var col in vehicleColliders)
+            {
+                Physics.IgnoreCollision(collider, col);
+            }
+        }
+        
     }
 
     private void OnCollisionEnter(Collision col)
@@ -66,12 +100,12 @@ public class RocketBehaviour : MonoBehaviour {
         Collider[] colliders = Physics.OverlapSphere(hit, radius);
         foreach (Collider c in colliders)
         {
-            Damageable character = col.gameObject.GetComponent<Damageable>();
+            Damageable character = c.transform.root.GetComponentInChildren(typeof(Damageable)) as Damageable;
             if (character != null)
             {
                 float dist = (c.transform.position - hit).magnitude;
                 int amount = dist == 0 ? damage : Mathf.RoundToInt(radius / dist * damage);
-                character.Damage(amount);
+                character.Damage(250);//TODO: Change this to the equation
             }
         }
 

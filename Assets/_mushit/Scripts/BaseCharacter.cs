@@ -23,5 +23,6 @@ public class BaseCharacter : MonoBehaviour, Damageable {
     public void Damage(int amount)
     {
         Health -= amount;
+        Debug.Log(Health);
     }
 }
