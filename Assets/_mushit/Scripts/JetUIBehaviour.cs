@@ -8,6 +8,7 @@ public class JetUIBehaviour : MonoBehaviour {
     public Text MGAmmoCounter;
     public Text RocketCounter;
     public Text BombCounter;
+    public Text ArmourCounter;
 
     private Vehicle controller;
     private JetWeaponController weaponController;
@@ -28,5 +29,7 @@ public class JetUIBehaviour : MonoBehaviour {
         MGAmmoCounter.text = "MG Ammo: " + weaponController.MGAmmo;
         RocketCounter.text = "Rockets: " + (weaponController.Rockets.Length - weaponController.RocketIndex);
         BombCounter.text = "Bombs: " + (weaponController.Bombs.Length - weaponController.BombIndex);
+
+        ArmourCounter.text = "Armour: " + controller.Armour;
     }
 }

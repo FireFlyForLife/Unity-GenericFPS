@@ -38,8 +38,6 @@ public class RocketBehaviour : MonoBehaviour {
             if(rigidbody.velocity.sqrMagnitude < targetVelocitySqrt)
                 rigidbody.AddForce(transform.up * acceleration, ForceMode.Acceleration);
 
-            Debug.Log(rigidbody.velocity.magnitude);
-
             if (!fired)
             {
                 fired = true;
@@ -104,8 +102,8 @@ public class RocketBehaviour : MonoBehaviour {
             if (character != null)
             {
                 float dist = (c.transform.position - hit).magnitude;
-                int amount = dist == 0 ? damage : Mathf.RoundToInt(radius / dist * damage);
-                character.Damage(250);//TODO: Change this to the equation
+                int amount = dist == 0 ? damage : Mathf.RoundToInt(radius / dist * (damage/radius));
+                character.Damage(amount);//TODO: Change this to the equation
             }
         }
 
