@@ -5,11 +5,13 @@ using UnityEngine.AI;
 
 public class SoldierBehaviour : BaseCharacter {
     public Transform target;
+    public string targetTag;
 
     NavMeshAgent nav;
     Animator animator;
 
 	void Start () {
+        if(target == null) target = GameObject.FindGameObjectWithTag(targetTag).transform;
         nav = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 	}
