@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseCharacter : MonoBehaviour, Damageable {
+public class BaseCharacter : MonoBehaviour, Damageable, Destroyable {
     public int Health {
         get {
             return _health;
@@ -23,6 +23,10 @@ public class BaseCharacter : MonoBehaviour, Damageable {
     public void Damage(int amount)
     {
         Health -= amount;
-        Debug.Log(Health);
+    }
+
+    public bool isDestroyed()
+    {
+        return IsDead();
     }
 }

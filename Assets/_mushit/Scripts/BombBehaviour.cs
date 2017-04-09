@@ -50,14 +50,21 @@ public class BombBehaviour : MonoBehaviour {
         Vector3 hit = col.contacts[0].point;
 
         Collider[] colliders = Physics.OverlapSphere(hit, radius);
+        List<GameObject> gameobjects = new List<GameObject>(colliders.Length);
         foreach(Collider c in colliders)
         {
-            Damageable character = c.transform.root.GetComponent<Damageable>();
-            if (character != null)
+            if (!gameobjects.Contains(c.gameObject))
             {
-                float dist = (c.transform.position - hit).magnitude;
-                int amount = dist == 0 ? damage : Mathf.RoundToInt( radius / dist * damage );
-                character.Damage(amount);
+                gameobjects.Add(c.gameObject);
+                Damageable character = c.transform.root.GetComponentInChildren<Damageable>();
+                if (character != null)
+                {
+                    float dist = (c.transform.position - hit).magnitude;
+                    int amount = dist == 0 ? damage : Mathf.RoundToInt(radius / dist * damage);
+                    character.Damage(amount);
+
+
+                }
             }
         }
 

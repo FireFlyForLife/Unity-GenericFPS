@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class PlayerUIBehaviour : MonoBehaviour {
     public Text HealthCounter;
-    public Text ARAmmoCounter;
-    public Text ARAmmoRemainingCounter;
 
     Player player;
     GunScript gun;
@@ -29,7 +27,5 @@ public class PlayerUIBehaviour : MonoBehaviour {
     void UpdateCounters()
     {
         HealthCounter.text = "Health: " + player.Health;
-        ARAmmoCounter.text = "Ammo: ";
-        ARAmmoRemainingCounter.text = "Remaining: ";
     }
 }

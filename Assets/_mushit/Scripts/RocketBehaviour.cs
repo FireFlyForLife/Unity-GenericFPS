@@ -96,14 +96,25 @@ public class RocketBehaviour : MonoBehaviour {
         Vector3 hit = col.contacts[0].point;
 
         Collider[] colliders = Physics.OverlapSphere(hit, radius);
+        List<GameObject> gameobjects = new List<GameObject>(colliders.Length);
         foreach (Collider c in colliders)
         {
-            Damageable character = c.transform.root.GetComponentInChildren(typeof(Damageable)) as Damageable;
-            if (character != null)
+            var v = c.transform.root.GetComponentInChildren<Vehicle>();
+            if (v != null && v.canControl)
+                continue;
+
+            if (!gameobjects.Contains(c.gameObject))
             {
-                float dist = (c.transform.position - hit).magnitude;
-                int amount = dist == 0 ? damage : Mathf.RoundToInt(radius / dist * (damage/radius));
-                character.Damage(amount);//TODO: Change this to the equation
+                gameobjects.Add(c.gameObject);
+                Damageable character = c.transform.root.GetComponentInChildren<Damageable>();
+                if (character != null)
+                {
+                    float dist = (c.transform.position - hit).magnitude;
+                    int amount = dist == 0 ? damage : Mathf.RoundToInt(radius / dist * damage);
+                    character.Damage(amount);
+
+
+                }
             }
         }
 

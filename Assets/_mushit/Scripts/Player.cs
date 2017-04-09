@@ -54,9 +54,10 @@ public class Player : BaseCharacter {
             SetControl(true);
         }
 
-        controllingVehicle = vehicle;
+        controllingVehicle = null;
 
-        if (vehicle != null && vehicle.Armour > 0) {
+        if (vehicle != null && !vehicle.isAI && vehicle.Armour > 0) {
+            controllingVehicle = vehicle;
             vehicle.canControl = true;
             vehicle.OnStart();
             cam.transform.parent = vehicle.CameraLocation;
@@ -82,7 +83,7 @@ public class Player : BaseCharacter {
     void HandleUse() {
         if (controllingVehicle == null) {
             RaycastHit hit;
-            if (Physics.Raycast(pData.Front.position, pData.Front.transform.forward, out hit, 100f)) {
+            if (Physics.Raycast(pData.Front.position, pData.Front.transform.forward, out hit, 5f)) {
                 Vehicle vehicle = hit.collider.GetComponentInParent<Vehicle>();
                 if(vehicle != null)
                     SetControllingVehicle(vehicle);

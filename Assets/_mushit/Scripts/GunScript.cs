@@ -32,15 +32,12 @@ public class GunScript : MonoBehaviour {
                 RaycastHit hit;
                 if (Physics.Raycast(pos, rot, out hit, maxRange))
                 {
-                    if (hit.collider.tag == "Enemy")
+                    Damageable damageable = hit.transform.root.GetComponentInChildren<Damageable>();
+                    if (damageable != null)
                     {
                         Instantiate(explosionPrefab, hit.point - rot * 0.5f, Quaternion.identity);
 
-                        BaseCharacter enemy = hit.collider.gameObject.GetComponent<BaseCharacter>();
-                        if (enemy != null)
-                        {
-                            enemy.Health -= damage;
-                        }
+                        damageable.Damage( damage );
                     } else if (hit.collider.tag.Equals("Terrain"))
                     {
                         TerrainDeformer deformer = hit.collider.GetComponent<TerrainDeformer>();

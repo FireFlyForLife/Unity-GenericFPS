@@ -69,8 +69,12 @@ public class TerrainDeformer : MonoBehaviour
 
     public void DestroyTerrain(Vector3 pos, float craterSizeInMeters)
     {
-        DeformTerrain(pos,craterSizeInMeters);
-        TextureDeformation(pos, craterSizeInMeters*1.5f);
+        bool deformTerrain = Settings.GetValue<bool>("DeformTerrain");
+        if(deformTerrain)
+            DeformTerrain(pos,craterSizeInMeters);
+        bool deformTexture = Settings.GetValue<bool>("DeformTexture");
+        if (deformTexture)
+            TextureDeformation(pos, craterSizeInMeters*1.5f);
     }
     
     protected void DeformTerrain(Vector3 pos, float craterSizeInMeters)
